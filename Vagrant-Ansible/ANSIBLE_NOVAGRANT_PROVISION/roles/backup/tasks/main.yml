@@ -1,0 +1,32 @@
+---
+- name: Deploy copy.sh
+  ansible.builtin.copy:
+    src: copy.sh
+    dest: "/home/johnd/copy.sh"
+    owner: "johnd"
+    group: "johnd"
+    mode: '0700'
+
+- name: Deploy Backup.service
+  become: true
+  ansible.builtin.copy:
+    src: backup_copy.service
+    dest: "/etc/systemd/system/"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Deploy save.list
+  ansible.builtin.copy:
+    src: save.list
+    dest: "/home/johnd/save.list"
+    owner: "johnd"
+    group: "johnd"
+    mode: '0700'
+
+- name: Enable backup_copy at boot
+  become: true
+  ansible.builtin.systemd:
+    name: backup_copy.service
+    state: started
+    enabled: yes

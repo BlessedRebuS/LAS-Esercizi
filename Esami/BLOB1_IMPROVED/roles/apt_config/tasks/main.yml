@@ -1,0 +1,2 @@
+- name: "enable non-free"
+  command: sed -i "1 s|$| contrib non-free|" /etc/apt/sources.list

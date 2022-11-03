@@ -1,0 +1,67 @@
+routers:
+  hosts:
+    router1:
+      static_interfaces:
+      - name: "eth1"
+        ip: "10.111.111.1"
+        netmask: "255.255.255.0"
+      - name: "eth2"
+        ip: "192.168.56.111"
+        netmask: "255.255.255.0"
+      routes:
+      - name: "eth2"
+        dest: " 10.222.222.0/24"
+        gateway: "192.168.56.222"
+      dnsmasq:
+        interfaces:
+        - "eth1"
+        - "eth2"
+        ranges:
+        - begin: "10.111.111.100"
+          end: "10.111.111.200"
+          lease: "12h"
+        # ntp_servers:
+        # - "10.10.10.254"
+        # - "20.20.0.1"
+        dns_servers:
+        - "10.111.111.1"
+        routes:
+        - network1: "10.222.222.0/24"
+          gateway1: "10.111.111.1"
+        # fixed_hosts:
+        # - mac: "08:00:27:09:A5:01"
+        #   ip: "10.200.2.1"
+        #   hostname: "servermain"
+        #   lease: "12h"
+    router2:
+      static_interfaces:
+      - name: "eth1"
+        ip: "10.222.222.1"
+        netmask: "255.255.255.0"
+      - name: "eth2"
+        ip: "192.168.56.222"
+        netmask: "255.255.255.0"
+      routes:
+      - name: "eth2"
+        dest: "10.111.111.0/24"
+        gateway: "192.168.56.111"
+      dnsmasq:
+        interfaces:
+        - "eth1"
+        - "eth2"
+        ranges:
+        - begin: "10.222.222.100"
+          end: "10.222.222.200"
+          lease: "12h"
+        # ntp_servers:
+        # - "10.30.0.1"
+        dns_servers:
+        - "10.222.222.1"
+        routes:
+        - network1: "10.111.111.0/24"
+          gateway1: "10.222.222.1"
+        # fixed_hosts:
+        # - mac: "08:00:27:09:A5:01"
+        #   ip: "10.30.2.1"
+        #   hostname: "servermain"
+        #   lease: "12h"

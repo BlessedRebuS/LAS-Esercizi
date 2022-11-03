@@ -1,0 +1,56 @@
+- name: "configure network eth0"
+  ansible.builtin.replace:
+    path: /etc/network/interfaces
+    regexp: 'allow-hotplug'
+    replace: 'auto'
+  notify: Restart Networking
+- name: "copy interfaces static"
+  ansible.builtin.copy:
+    src: "{{ common_folder }}/eth_static"
+    dest: "/etc/network/interfaces.d/{{ item.name }}"
+  loop: "{{ static_interfaces  }}"
+  when: static_interfaces is defined
+  notify: Restart Networking
+- name: "set names"
+  ansible.builtin.replace:
+    path: "/etc/network/interfaces.d/{{ item.name }}"
+    regexp: '<INT_NAME>'
+    replace: '{{ item.name }}'
+  loop: "{{ static_interfaces }}"
+  when: static_interfaces is defined
+- name: "configure ip"
+  ansible.builtin.replace:
+    path: "/etc/network/interfaces.d/{{ item.name }}"
+    regexp: '<LAN_IP>'
+    replace: '{{ item.ip }}'
+  loop: "{{ static_interfaces }}"
+  when: static_interfaces is defined
+- name: "configure netmask"
+  ansible.builtin.replace:
+    path: "/etc/network/interfaces.d/{{ item.name }}"
+    regexp: '<LAN_NETMASK>'
+    replace: '{{ item.netmask }}'
+  loop: "{{ static_interfaces }}"
+  when: static_interfaces is defined
+  notify: "Restart Networking"
+- name: "configure routes"
+  lineinfile:
+    path: "/etc/network/interfaces.d/{{ item.name }}"
+    line: "up /sbin/ip route add {{ item.dest }} via {{ item.gateway }}"
+  loop: "{{ routes }}"
+  when: routes is defined
+- name: "copy interfaces dhcp"
+  ansible.builtin.copy:
+    src: "{{ common_folder }}/eth_dhcp"
+    dest: "/etc/network/interfaces.d/{{ item.name }}"
+  loop: "{{ dhcp_interfaces }}"
+  when: dhcp_interfaces is defined
+- name: "write names"
+  ansible.builtin.replace:
+    path: "/etc/network/interfaces.d/{{ item.name }}"
+    regexp: '<INT_NAME>'
+    replace: '{{ item.name }}'
+    validate: "/usr/sbin/ifup --no-act -i %s {{ item.name }}"
+  loop: "{{ dhcp_interfaces }}"
+  when: dhcp_interfaces is defined
+  notify: Restart Networking                          

@@ -1,0 +1,9 @@
+- name: "create new conf"
+  ansible.builtin.lineinfile:
+    path: /etc/rsyslog.d/{{ item.filename }}
+    state: present
+    create: True
+    line: "$ModLoad  imudp.so\n$UDPServerRun514"
+  loop: "{{ remote_logging_files }}"
+  when: remote_logging_files is defined
+  notify: restart rsyslog

@@ -1,0 +1,5 @@
+servers:
+  hosts:
+    server1:
+    server2:
+    servermain:

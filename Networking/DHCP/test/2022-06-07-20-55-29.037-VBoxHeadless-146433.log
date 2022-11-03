@@ -1,0 +1,12 @@
+Log created: 2022-06-07T20:55:29.370551000Z
+Process ID:  146433 (0x23c01)
+Parent PID:  2657 (0xa61)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: LAS_server_1654617825745_56254
+Arg[3]: --startvm
+Arg[4]: 1a941860-0d9d-4566-b8a7-d1bc48dc1f08
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

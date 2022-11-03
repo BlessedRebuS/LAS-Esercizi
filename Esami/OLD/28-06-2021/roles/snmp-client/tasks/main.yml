@@ -1,0 +1,17 @@
+
+- name: Install snmp
+  ansible.builtin.apt:
+    name: snmp
+    update_cache: true
+  
+- name: Comment mibs
+  command: sed -i 's/mibs :/# mibs :/g' /etc/snmp/snmp.conf
+
+- name: Edit APT sources
+  command: sed -i "1 s|$| contrib non-free|" /etc/apt/sources.list
+
+- name: Install snmp-mibs-downloader 
+  ansible.builtin.apt:
+    name: snmp-mibs-downloader
+    update_cache: true
+

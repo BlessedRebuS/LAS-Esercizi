@@ -1,0 +1,20 @@
+---
+- name: Enable UDP rsyslog
+  lineinfile:
+    path: /etc/rsyslog.conf
+    state: present
+    line: "{{ item }}"
+  with_items:
+  - 'module(load="imudp")'
+  - 'input(type="imudp" port="514")'
+
+- name: Creating custom log
+  lineinfile:
+    path: "/etc/rsyslog.d/mylog.conf"
+    state: present
+    create: true
+    line: "local4.=info  /var/log/myevents.log"
+    
+- name: Comment add custom logger
+  command: echo "local4.=info  /var/log/test.log" > /etc/rsyslog.d/mylog.conf
+  notify: Restart rsyslog

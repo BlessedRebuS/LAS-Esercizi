@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - common
+
+- hosts: 
+    - client
+  become: true
+  roles:
+    - client
+
+- hosts: 
+    - router1
+  become: true
+  roles:
+    - router1
+
+- hosts: 
+    - router2
+  become: true
+  roles:
+    - router2
+
+- hosts: server
+  become: true
+  roles:
+    - server

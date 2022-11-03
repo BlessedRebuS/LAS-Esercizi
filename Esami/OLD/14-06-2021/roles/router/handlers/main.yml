@@ -1,0 +1,15 @@
+---
+- name: Restart Networking
+  ansible.builtin.service:
+    name: networking
+    state: restarted
+
+- name: Restart Dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+
+- name: Restart SNMP
+  ansible.builtin.service:
+    name: snmpd.service
+    state: restarted

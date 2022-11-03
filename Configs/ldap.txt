@@ -1,0 +1,75 @@
+
+#esempio autenticazione semplice in chiaro (-x -H ldap:// IP.DEL.SERVER /)
+ldapsearch -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap://10.0.2.15/ -b "dc=labammsis" -s sub
+
+#entry base ldif
+dn: ou=People,dc=labammsis
+objectClass: organizationalunit
+ou: People
+description: system users
+
+#comando per aggiungere file.ldif
+ldapadd -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap:/// -f people.ldif
+
+#comando per cercare
+ldapsearch -x -LLL -H ldap:/// -b "dc=labammsis" -s sub
+
+
+#aggiunta utenti
+dn: uid=dave,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+givenName: Davide
+cn: Davide
+sn: Berardi
+mail: davide.berardi@unibo.it
+uid: dave
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/dave
+loginShell: /bin/bash
+gecos:Davide "Dave" Berardi
+userPassword: {crypt}x
+
+#aggiunta gruppi
+dn: cn=dave,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: dave
+gidNumber: 10000
+
+
+#filtro uid
+sudo ldapsearch -x -b "dc=labammsis" -H ldap://10.0.2.15/ "(&(objectClass=*)(uid=dave))"
+
+#cambio password
+ldappasswd -D cn=admin,dc=labammsis -w gennaio.marzo uid=dave,ou=People,dc=labammsis -s ciaociao
+
+#modificare una entry (cambio shell)
+ldapmodify -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap:/// -f chsh.ldif
+
+#chsh.ldif
+dn: uid=dave,ou=People,dc=labammsis
+changetype: modify
+replace: loginShell
+loginShell: /bin/sh
+
+#add user dave to group ammsis2022 (poi usare ldapmodify)
+dn: cn=ammsis2022,ou=Groups,dc=labammsis
+changetype: modify
+add: memberuid
+memberuid: dave
+
+#per configurare sudo-ldap
+ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/doc/sudo-ldap/schema.olcSudo
+
+#per informare /etc/ldap/ldap.conf quale DIT usare per sudo
+SUDOERS_BASE ou=SUDOers,dc=labammsis
+
+#convertire la configurazione corrente
+cvtsudoers -b "ou=SUDOers,dc=labammsis" -f ldif -o sudoers.ldif /etc/sudoers
+
+#aggiungere la entry
+ldapadd -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap:/// -f sudoers.ldif

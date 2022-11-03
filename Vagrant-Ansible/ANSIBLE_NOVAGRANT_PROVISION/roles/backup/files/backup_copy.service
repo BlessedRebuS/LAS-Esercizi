@@ -1,0 +1,12 @@
+[Unit]
+Description=Create Backup with copy.sh
+
+[Service]
+Type=simple
+ExecStart=/home/johnd/copy.sh
+User=johnd
+Group=johnd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

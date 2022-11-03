@@ -1,0 +1,13 @@
+# location
+
+snmpget -v 1 -c public 192.168.56.203 .1.3.6.1.2.1.1.4.0
+
+snmpget -v 1 -c public 192.168.56.203 NET-SNMP-EXTEND-MIB::nsExtendOutputFull.\"test\"
+
+# aggiungere comando da lanciare al file /etc/snmp/snmp.conf
+
+extend-sh test echo HelloWorld
+
+# aggiungere a snmp comando da eseguire come root senza password
+
+Debian-snmp ALL=NOPASSWD:/usr/bin/ss -lntp

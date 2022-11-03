@@ -1,0 +1,2 @@
+auto <INT_NAME>
+iface <INT_NAME> inet dhcp

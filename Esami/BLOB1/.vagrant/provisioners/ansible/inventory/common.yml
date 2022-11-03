@@ -1,0 +1,7 @@
+all:
+  children:
+    clients:
+    servers:
+    routers:
+  vars:
+    common_folder: "common_files"

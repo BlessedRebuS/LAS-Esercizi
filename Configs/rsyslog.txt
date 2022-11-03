@@ -1,0 +1,20 @@
+# si triggera con 
+logger -n 127.0.0.1 -p local1.info "ciao"
+
+# per generare facility 
+echo "local4.=info  /var/log/myevents.log" > /etc/rsyslog.d/mylog.conf
+
+# rimuovere
+mv /etc/rsyslog.d/mylog.conf /etc/rsyslog.d/mylog.off
+
+
+# per abilitare il logging remoto UDP editare /etc/rsyslog.conf
+module(load="imudp")
+input(type="imudp" port="514")
+
+# per inviare log remoto
+logger -n 10.1.1.254 -p local4.info "asdasdasda"
+
+# !!! in ogni caso dopo qualsiasi modifica del genere mostrato sopra !!!
+systemctl restart rsyslog
+

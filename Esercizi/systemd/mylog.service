@@ -1,0 +1,12 @@
+[Unit]
+Description=My Logger
+Requires=rsyslog.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/echo "local1.=info /var/log/sd.log" > /etc/rsyslog.d/mylog.conf
+ExecStop=/usr/bin/echo "" > /etc/rsyslog.d/mylog.conf
+
+[Install]
+WantedBy=multi-user.target

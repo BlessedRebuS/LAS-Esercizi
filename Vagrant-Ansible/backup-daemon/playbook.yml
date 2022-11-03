@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: "Add the user'johnd'"
+      ansible.builtin.user:
+        name: johnd
+        password: $6$Id2EC2WZxCiz2oVz$Opln/4mWOT9Yi6bajwuZ3/nAO3JF2dxDNxwbx9C9pU7JIrIyeJSFMMDRvTTOIEQP4.n6.4uz8GoOlExC/VUcu.
+        expires: -1
+        create_home: True
+
+    - name: Copy file
+      ansible.builtin.copy:
+        src: copy.sh
+        dest: /home/vagrant/copy.sh
+        mode: '0755'
+
+    - name: Copy file
+      ansible.builtin.copy:
+        src: save.list
+        dest: /home/vagrant/save.list py.sh
+        mode: '0666'
+      
+    - name: Install backup service
+      ansible.builtin.copy:
+        src: mybackup.service
+        dest: /lib/systemd/system/mybackup.service
+        mode: '0644'
+      
+    - name: Guarantee backup.service is started
+      ansible.builtin.systemd:
+        state: started
+        name: mybackup.service

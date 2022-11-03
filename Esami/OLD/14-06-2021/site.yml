@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  roles:
+   - role: common
+
+- hosts: client
+  become: true
+  roles:
+   - role: client
+
+- hosts: server1
+  become: true
+  roles:
+   - role: server
+
+- hosts: server2
+  become: true
+  roles:
+   - role: server
+
+- hosts: router
+  become: true
+  roles:
+            - router
+            - rsyslog

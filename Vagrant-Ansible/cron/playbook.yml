@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: "Add the user'johnd'"
+      ansible.builtin.user:
+        name: johnd
+        password: $6$Id2EC2WZxCiz2oVz$Opln/4mWOT9Yi6bajwuZ3/nAO3JF2dxDNxwbx9C9pU7JIrIyeJSFMMDRvTTOIEQP4.n6.4uz8GoOlExC/VUcu.
+        expires: -1
+        create_home: True
+        
+    - name: Schedule backup
+      ansible.builtin.cron:
+        name: "backup selected files"
+        minute: "*/2"
+        weekday: "1-5"
+        month: "1-7,9-12"
+        job: "/usr/bin/copy.sh 2>/dev/null >/dev/null"
+
+    - name: 'Remove cron job'
+      ansible.builtin.cron:
+        name: "backup selected files"
+        state: absent

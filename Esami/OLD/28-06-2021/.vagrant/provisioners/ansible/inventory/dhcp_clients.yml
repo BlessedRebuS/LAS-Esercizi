@@ -1,0 +1,8 @@
+dhcp_clients:
+  hosts:
+    client:
+    server:
+  vars:
+    dhcp_interfaces:
+    - name: "eth1"
+

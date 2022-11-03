@@ -1,0 +1,10 @@
+[Unit]
+Description=My backup
+
+[Service]
+Type=simple
+ExecStart=/home/vagrant/copy.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

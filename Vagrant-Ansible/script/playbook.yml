@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: "Add the user'johnd'"
+      ansible.builtin.user:
+        name: johnd
+        password: $6$Id2EC2WZxCiz2oVz$Opln/4mWOT9Yi6bajwuZ3/nAO3JF2dxDNxwbx9C9pU7JIrIyeJSFMMDRvTTOIEQP4.n6.4uz8GoOlExC/VUcu.
+        expires: -1
+        create_home: True
+        
+    - name: Copy file
+      ansible.builtin.copy:
+        src: save.list
+        dest: /home/vagrant/save.list
+        mode: '0755'
+
+    - name: Ensure passwd is backed up
+      ansible.builtin.lineinfile:
+        path: /home/vagrant/save.list
+        line: /etc/passwd
+        state: absent
+
+    - name: Add johnd to sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: 'johnd    ALL=(ALL:ALL) ALL'
+        insertafter: root
+        validate: 'visudo -cf %s'

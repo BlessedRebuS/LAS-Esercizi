@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Set eth1 netmask
+    community.general.interfaces_file:
+      iface: eth1
+      option: 'netmask'
+      value: '255.255.255.0'
+      backup: yes
+      state: present
+    when: ansible_facts['os_family'] in ['Debian']

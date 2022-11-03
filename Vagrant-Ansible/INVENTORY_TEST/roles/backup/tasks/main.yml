@@ -1,0 +1,8 @@
+---
+- name: Deploy copy.sh
+  ansible.builtin.copy:
+    src: copy.sh
+    dest: "/home/johnd/copy.sh"
+    owner: "johnd"
+    group: "johnd"
+    mode: '0700'

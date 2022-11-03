@@ -1,0 +1,7 @@
+---
+- name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: eth1_cfg
+    dest: /etc/network/interfaces.d/eth1_cfg
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart Networking

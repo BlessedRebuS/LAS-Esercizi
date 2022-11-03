@@ -1,0 +1,67 @@
+---
+- name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: eth1_cfg
+    dest: /etc/network/interfaces.d/eth1_cfg
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart Networking
+
+- name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: eth2_cfg
+    dest: /etc/network/interfaces.d/eth2_cfg
+    validate: /usr/sbin/ifup --no-act -i %s eth2
+  notify: Restart Networking
+
+- name: Enable Forwarding between client and server
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Install Dnsmasq
+  ansible.builtin.apt:
+    name: dnsmasq
+    update_cache: true
+
+- name: Copy Dnsmasq configuration
+  ansible.builtin.copy:
+    src: dnsmasq.conf
+    dest: '/etc/dnsmasq.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: Restart Dnsmasq
+
+- name: Enable Dnsmasq at boot
+  ansible.builtin.systemd:
+    name: dnsmasq.service
+    state: started
+
+- name: Install snmpd
+  ansible.builtin.apt:
+    name: snmpd
+    update_cache: true
+  
+- name: Copy a snmpd.conf
+  ansible.builtin.copy:
+    src: snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+  notify: Restart SNMP
+
+- name: script
+  ansible.builtin.copy:
+    src: firstcommand
+    dest: '/bin/firstcommand'
+    owner: 'root'
+    group: 'root'
+    mode: '0777'
+  
+- name: Ansible insert a line before example
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Debian-snmp ALL=NOPASSWD:/bin/firstcommand'
+    insertafter: '@includedir /etc/sudoers.d'
+    validate: /usr/sbin/visudo -cf %s

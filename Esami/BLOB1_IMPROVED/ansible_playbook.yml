@@ -1,0 +1,39 @@
+- hosts: all
+  become: yes
+  roles: 
+#    - apt_config
+    - configure_network
+    # - snmp-server
+    # - snmp-client
+  # tasks:
+  # - name: "install software"
+  #   ansible.builtin.apt:
+  #     name: 
+  #       - vim
+  #       - tcpdump
+  #     update_cache: yes
+- hosts: routers
+  become: yes
+  roles:
+    - routing
+    - dhcp_server
+# - hosts: servermain
+#   become: yes
+#   roles:
+#     - ldap
+# - hosts: client1
+#   become: yes
+#   roles:
+#     - ldap
+# - hosts: server
+#   become: yes
+#   roles:
+#     - ldap
+# - hosts: server
+#   become: yes
+#   roles:
+#      - ldap
+# - hosts: client
+#   become: yes
+#   roles:
+#     - ldap

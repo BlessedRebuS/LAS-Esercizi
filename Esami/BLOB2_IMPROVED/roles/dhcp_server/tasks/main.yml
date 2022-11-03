@@ -1,0 +1,54 @@
+- name: Install dnsmasq
+  apt:
+    name: dnsmasq
+    state: present
+    update_cache: yes
+- name: "interfaces"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    state: present
+    create: true
+    line: "interface={{ item }}"
+  loop: "{{ dnsmasq.interfaces }}"
+  when: dnsmasq.interfaces is defined
+  notify: Restart dnsmasq
+- name: "ranges"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-range={{ item.begin }},{{ item.end }},{{ item.lease }}"
+  loop: "{{ dnsmasq.ranges }}"
+  when: dnsmasq.ranges is defined
+  notify: Restart dnsmasq
+- name: "option 3"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-option=3"
+  notify: Restart dnsmasq
+- name: "ntp_servers"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-option=option:ntp-server,{{ item }}"
+  loop: "{{ dnsmasq.ntp_servers }}"
+  when: dnsmasq.ntp_servers is defined
+  notify: Restart dnsmasq
+- name: "interfaces"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-option=6,{{ item }}"
+  loop: "{{ dnsmasq.dns_servers }}"
+  when: dnsmasq.dns_servers is defined
+  notify: Restart dnsmasq
+- name: "routes"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-option={{ item.name }},121,{{ item.network }},{{ item.gateway }}"
+  loop: '{{ dnsmasq.routes }}'
+  when: dnsmasq.routes is defined
+  notify: Restart dnsmasq
+- name: "hosts"
+  lineinfile:
+    path: "/etc/dnsmasq.conf"
+    line: "dhcp-host={{ item.mac }},{{ item.ip }},{{ item.hostname }},{{ item.lease }}"
+  loop: "{{ dnsmasq.fixed_hosts }}"
+  when: dnsmasq.fixed_hosts is defined
+  notify: Restart dnsmasq

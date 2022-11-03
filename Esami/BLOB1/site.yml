@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - common
+
+- hosts: 
+    - client
+  become: true
+  roles:
+    - client
+    - snmp-client
+    - ldap
+
+- hosts: router
+  become: true
+  roles:
+    - router
+
+- hosts: server
+  become: true
+  roles:
+    - server
+    # - snmp-server
+    # - rsyslog
+    - ldap

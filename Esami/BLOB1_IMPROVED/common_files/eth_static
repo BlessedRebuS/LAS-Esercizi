@@ -1,0 +1,4 @@
+auto <INT_NAME>
+iface <INT_NAME> inet static
+	address <LAN_IP>
+	netmask <LAN_NETMASK>

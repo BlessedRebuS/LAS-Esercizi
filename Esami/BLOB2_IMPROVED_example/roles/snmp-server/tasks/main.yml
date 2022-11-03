@@ -1,0 +1,30 @@
+- name: "snmpd installation"
+  ansible.builtin.apt:
+    name:
+      - snmpd
+    update_cache: yes
+
+- name: "edit snmpd.conf"
+  ansible.builtin.replace:
+    path: /etc/snmp/snmpd.conf
+    regexp: '^agentaddress\s+127.0.0.1'
+    replace: "agentAddress udp:161"
+  notify: restart snmpd
+
+- name: "create view for all MIBs"
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmpd.conf
+    line: "view all included .1"
+  notify: restart snmpd
+
+- name: "create view for all MIBs"
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmpd.conf
+    line: "rocommunity public default -V all"
+  notify: restart snmpd
+  
+- name: "create view for all MIBs"
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmpd.conf
+    line: "rwcommunity supercom default -V all"
+  notify: restart snmpd
